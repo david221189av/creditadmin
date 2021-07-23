@@ -1,0 +1,1 @@
+<date-time-picker name="{{ $field->name() }}" type="date" default-value="{{ $field->value() }}"></date-time-picker>

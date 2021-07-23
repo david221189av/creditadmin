@@ -1,0 +1,21 @@
+<?php
+
+namespace DummyRootNamespaceHttp\Terranet\Administrator\Dashboard;
+
+use Terranet\Administrator\Dashboard\Panel;
+use Terranet\Administrator\Traits\Stringify;
+
+class DummyClass extends Panel
+{
+    use Stringify;
+
+    /**
+     * Widget contents
+     *
+     * @return mixed string|View
+     */
+    public function render()
+    {
+        return view('DummyTemplate')->with([]);
+    }
+}
