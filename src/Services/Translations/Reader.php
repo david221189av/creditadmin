@@ -21,7 +21,7 @@ class Reader
         return $locales->reduce(function ($translations, $locale) use ($files) {
             $files->each(function ($file) use ($locale, &$translations) {
                 if (file_exists($path = $this->pathToFile($file, $locale))) {
-                    $content[$file] = include_once $path;
+                    $content[$file] = include $path;
 
                     foreach (Arr::dot($content) as $key => $value) {
                         $translations[$key][$locale->iso6391()] = $value ? $value : '';

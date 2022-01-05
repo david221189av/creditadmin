@@ -3,6 +3,7 @@
 namespace Terranet\Administrator\Services;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Terranet\Administrator\Services\Translations\Reader;
@@ -101,7 +102,7 @@ class TranslationsManager
 
             $data = array_replace_recursive($translations['content'], $value);
 
-            $content = '<?php'.str_repeat(PHP_EOL, 2).'return '.$this->arrayToString($data).';';
+            $content = '<?php' . str_repeat(PHP_EOL, 2) . 'return ' . $this->arrayToString($data) . ';';
 
             $this->filesystem->put($translations['path'], $content, true);
         }
@@ -116,7 +117,7 @@ class TranslationsManager
         static $files = null;
 
         if (null === $files) {
-            $path = 'lang'.\DIRECTORY_SEPARATOR.\localizer\locale()->iso6391();
+            $path = 'lang' . \DIRECTORY_SEPARATOR . \localizer\locale()->iso6391();
 
             $files = collect(
                 glob(resource_path("{$path}/*.php"))
@@ -145,7 +146,7 @@ class TranslationsManager
 
         return [
             'path' => $path,
-            'content' => include_once $path,
+            'content' => include $path,
         ];
     }
 
@@ -155,15 +156,15 @@ class TranslationsManager
      */
     protected function makeFile($file, $locale)
     {
-        $directoryTranslationsPath = resource_path('lang'.\DIRECTORY_SEPARATOR.$locale);
+        $directoryTranslationsPath = resource_path('lang' . \DIRECTORY_SEPARATOR . $locale);
 
         if (!$this->filesystem->exists($directoryTranslationsPath)) {
             $this->filesystem->makeDirectory($directoryTranslationsPath);
         }
 
-        $content = '<?php'.str_repeat(PHP_EOL, 2).'return [];';
+        $content = '<?php' . str_repeat(PHP_EOL, 2) . 'return [];';
 
-        $this->filesystem->put($directoryTranslationsPath.\DIRECTORY_SEPARATOR.$file.'.php', $content, true);
+        $this->filesystem->put($directoryTranslationsPath . \DIRECTORY_SEPARATOR . $file . '.php', $content, true);
     }
 
     /**
@@ -174,10 +175,16 @@ class TranslationsManager
      */
     protected function keyToArray(&$arr, $path, $value, $separator = '.')
     {
-        foreach ($keys = explode($separator, $path) as $key) {
-            $arr = &$arr[$key];
-        }
-        $arr = $value;
+//        foreach ($keys = explode($separator, $path) as $key) {
+//            $arr = &$arr[$key];
+//        }
+//        $arr = $value;
+
+        $arrTemp = Arr::undot([
+            $path => trim($value)
+        ]);
+
+        $arr = array_merge_recursive($arr, $arrTemp);
     }
 
     /**
